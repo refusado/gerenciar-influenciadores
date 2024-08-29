@@ -1,0 +1,30 @@
+{
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "extends": ["standard", "plugin:prettier/recommended", "plugin:@typescript-eslint/recommended"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "prettier/prettier": [
+      "warn",
+      {
+        "endOfLine": "auto",
+        "singleQuote": true,
+        "printWidth": 80,
+        "tabWidth": 2,
+        "trailingComma": "es5",
+        "arrowParens": "always",
+        "semi": true
+      }
+    ],
+    "camelcase": "off"
+  },
+  "ignorePatterns": [
+    "node_modules/**/*",
+    "dist/**/*"
+  ]
+}
