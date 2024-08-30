@@ -2,12 +2,20 @@ import { fastifyCors } from '@fastify/cors';
 import fastify from 'fastify';
 import env from './env';
 import { apiRoutes } from './routes';
+import fastifyJwt from '@fastify/jwt';
+import fastifyCookie from '@fastify/cookie';
 
 const app = fastify();
 
-app.register(fastifyCors, {
-  origin: '*',
+app.register(fastifyCors, { origin: '*' });
+
+app.register(fastifyJwt, { secret: env.JWT_SECRET });
+app.addHook('preHandler', (request, _, next) => {
+  request.jwt = app.jwt;
+  next();
 });
+
+app.register(fastifyCookie, { secret: 'secret' });
 
 app.register(apiRoutes, { prefix: '/api' });
 
