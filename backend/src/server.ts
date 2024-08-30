@@ -1,11 +1,7 @@
 import { fastifyCors } from '@fastify/cors';
 import fastify from 'fastify';
-import {
-  serializerCompiler,
-  validatorCompiler,
-} from 'fastify-type-provider-zod';
 import env from './env';
-import { adminRoutes } from './routes/admin';
+import { apiRoutes } from './routes';
 
 const app = fastify();
 
@@ -13,12 +9,7 @@ app.register(fastifyCors, {
   origin: '*',
 });
 
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
-
-app.get('/', async (_, reply) => reply.send({ success: true }));
-
-app.register(adminRoutes, { prefix: '/admin' });
+app.register(apiRoutes, { prefix: '/api' });
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, (err) => {
   if (err) {
