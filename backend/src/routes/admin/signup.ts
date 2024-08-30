@@ -2,6 +2,7 @@ import { prisma } from '@/utils/prisma';
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import z from 'zod';
+import bcrypt from 'bcrypt';
 
 const bodySchema = z.object({
   name: z.string().min(3),
@@ -14,15 +15,6 @@ const bodySchema = z.object({
     }),
 });
 
-/**
- * POST /admin/signup
- *
- * @summary Create a new admin user
- *
- * @body {name: string, email: string, password: string}
- *
- * @response 201 {createdAdmin: {id: number, name: string, email: string}}
- */
 export async function signupAdmin(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/signup',
@@ -54,8 +46,9 @@ export async function signupAdmin(app: FastifyInstance) {
           message: 'This email address already exists.',
         });
 
+      const passwordHash = await bcrypt.hash(password, 10);
       const createdAdmin = await prisma.admin.create({
-        data: { name, email, password },
+        data: { name, email, password: passwordHash },
       });
 
       reply.status(201).send({
