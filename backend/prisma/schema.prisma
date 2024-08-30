@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+}
+
+model Influencer {
+  id        Int    @id @default(autoincrement())
+  name      String
+  niche     String
+  reach     String
+  instagram String @unique
+  image     String
+
+  // address
+  cep          String
+  state        String
+  city         String
+  neighborhood String
+  street       String
+
+  createdAt           DateTime              @default(now())
+  updateAt            DateTime              @updatedAt
+  InfluencerBrandLink InfluencerBrandLink[]
+}
+
+model Brand {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  niche       String
+
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  InfluencerBrandLink InfluencerBrandLink[]
+}
+
+// many to many relation to connect influencers and brands
+model InfluencerBrandLink {
+  influencerId Int
+  brandId      Int
+  createdAt    DateTime @default(now())
+
+  influencer Influencer @relation(fields: [influencerId], references: [id])
+  brand      Brand      @relation(fields: [brandId], references: [id])
+
+  @@id([influencerId, brandId])
+}

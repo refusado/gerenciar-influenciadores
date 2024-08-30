@@ -5,6 +5,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import env from './env';
+import { adminRoutes } from './routes/admin';
 
 const app = fastify();
 
@@ -16,6 +17,8 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.get('/', async (_, reply) => reply.send({ success: true }));
+
+app.register(adminRoutes, { prefix: '/admin' });
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, (err) => {
   if (err) {
