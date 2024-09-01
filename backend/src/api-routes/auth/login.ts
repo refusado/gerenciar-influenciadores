@@ -37,7 +37,7 @@ export async function loginAdmin(app: FastifyInstance) {
       const admin = await prisma.admin.findUnique({ where: { email } });
 
       if (!admin)
-        return reply.status(409).send({
+        return reply.status(404).send({
           message: 'This email address does not exist.',
         });
 

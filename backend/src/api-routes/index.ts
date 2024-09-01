@@ -4,9 +4,9 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import { loginAdmin } from './admin/login';
-import { logoutAdmin } from './admin/logout';
-import { signupAdmin } from './admin/signup';
+import { loginAdmin } from './auth/login';
+import { logoutAdmin } from './auth/logout';
+import { signupAdmin } from './auth/signup';
 
 export async function apiRoutes(app: FastifyInstance) {
   app.setErrorHandler(errorHandler);
