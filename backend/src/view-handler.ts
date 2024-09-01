@@ -16,7 +16,7 @@ export async function viewRoutes(app: FastifyInstance) {
   app.get('/admin', async (request, reply) => {
     const token = request.cookies.access_token;
 
-    if (!token) return reply.redirect('/?unauthorized');
+    if (!token) return reply.redirect('/login?message=unauthorized');
 
     return reply.sendFile('admin.html', clientRoot);
   });

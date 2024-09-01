@@ -12,7 +12,7 @@ export async function logoutAdmin(app: FastifyInstance) {
     async (_, reply) => {
       reply.clearCookie('access_token');
 
-      return reply.redirect('/?logout');
+      return reply.redirect('/login?message=logout');
     }
   );
 }

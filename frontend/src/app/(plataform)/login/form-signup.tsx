@@ -1,9 +1,10 @@
 'use client';
 
+import { useToast } from '@/components/toast';
 import { api } from '@/utils/api';
 import * as Form from '@radix-ui/react-form';
 import axios from 'axios';
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type FormData = {
@@ -13,6 +14,7 @@ type FormData = {
 };
 
 export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
+  const { addToast } = useToast();
   const {
     handleSubmit,
     register,
@@ -30,7 +32,7 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
       const response = await api.post('/signup', data);
 
       console.log('Admin created successfully:', response.data);
-      alert('Conta criada com sucesso!');
+      addToast('Conta criada com sucesso!');
       reset();
     } catch (error) {
       if (axios.isAxiosError(error)) {
