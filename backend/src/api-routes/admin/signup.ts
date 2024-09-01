@@ -37,6 +37,7 @@ export async function signupAdmin(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const { name, email, password } = request.body;
 
       const existingAdmin = await prisma.admin.findUnique({ where: { email } });
