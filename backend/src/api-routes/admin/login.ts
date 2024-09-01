@@ -56,7 +56,7 @@ export async function loginAdmin(app: FastifyInstance) {
 
       reply.setCookie('access_token', token, {
         path: '/',
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: 'strict',
         maxAge: 60 * 60 * 24 * 7, // 7 days

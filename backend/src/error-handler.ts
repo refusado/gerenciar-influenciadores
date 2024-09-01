@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { ZodError } from 'zod';
 
+// abstracting error handler to handle request data type erros (throwed by zod)
 export default ((error, _, reply) => {
   if (error instanceof ZodError) {
     return reply.status(400).send({

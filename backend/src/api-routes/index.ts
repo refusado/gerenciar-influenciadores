@@ -1,13 +1,12 @@
+import errorHandler from '@/error-handler';
 import { FastifyInstance } from 'fastify';
-
 import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import { signupAdmin } from './admin/signup';
-import errorHandler from '@/error-handler';
 import { loginAdmin } from './admin/login';
 import { logoutAdmin } from './admin/logout';
+import { signupAdmin } from './admin/signup';
 
 export async function apiRoutes(app: FastifyInstance) {
   app.setErrorHandler(errorHandler);
