@@ -3,6 +3,7 @@ import {
   fontFamily as defaultFontFamily,
   screens as defaultScreens,
 } from 'tailwindcss/defaultTheme';
+import colors from 'tailwindcss/colors';
 
 export default {
   darkMode: 'class',
@@ -27,7 +28,9 @@ export default {
       fontFamily: {
         sans: ['var(--font-sans)', ...defaultFontFamily.sans],
       },
-      colors: {},
+      colors: {
+        error: '#e62233',
+      },
     },
   },
   plugins: [require('tailwindcss-animated')],

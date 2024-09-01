@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 
 const bodySchema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(1).max(50),
 });
 
 export async function loginAdmin(app: FastifyInstance) {

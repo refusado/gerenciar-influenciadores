@@ -2,47 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  @apply scroll-smooth antialiased;
-}
-
-* {
-  @apply ring-[#2563eb];
-}
-
-button, a {
-  @apply outline-none focus-visible:outline-none focus-visible:ring-2 duration-150;
-}
-
-a {
-  @apply text-blue-500 hover:underline font-normal;
-}
-
-input {
-  @apply bg-zinc-950 text-zinc-200 border-zinc-800;
-}
-
 @layer components {
   .container {
     @apply py-14 sm:py-24 px-2.5 sm:px-4;
   }
 }
 
+:root {
+  @apply scroll-smooth antialiased;
+}
+
+* {
+  @apply ring-purple-600 selection:bg-purple-600/60;
+}
+
+button, a {
+  @apply outline-none focus-visible:outline-none focus-visible:ring-2 duration-150;
+}
+
 h1 {
   @apply font-medium text-3xl sm:text-4xl mb-6;
 }
 
+.error-text {
+  @apply text-error;
+}
+
 input {
-  @apply outline-none focus-visible:outline-none focus-visible:ring-2 duration-150;
+  @apply outline-none focus-visible:outline-none focus-visible:ring-2 duration-150 bg-zinc-950 text-zinc-200 border-zinc-800 data-[invalid]:ring-error/80;
 }
 
 .ToastRoot[data-swipe='move'] {
   transform: translateX(var(--radix-toast-swipe-move-x));
 }
+
 .ToastRoot[data-swipe='cancel'] {
   transform: translateX(0);
   transition: transform 200ms ease-out;
 }
+
 .ToastRoot[data-swipe='end'] {
   animation: slideRight 100ms ease-out;
 }

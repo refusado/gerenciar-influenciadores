@@ -2,53 +2,77 @@
 
 import { useToast } from '@/components/toast';
 import { api } from '@/utils/api';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Envelope, Key, UserRectangle } from '@phosphor-icons/react';
 import * as Form from '@radix-ui/react-form';
 import axios from 'axios';
 import { forwardRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-type FormData = {
-  name: string;
-  email: string;
-  password: string;
-};
+const FormSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'É necessário informar um nome')
+    .min(3, 'O nome deve ter pelo menos 3 caracteres')
+    .max(32, 'Nome muito longo'),
+  email: z.string().email('Email inválido'),
+  password: z
+    .string()
+    .min(1, 'É necessário informar uma senha')
+    .min(6, 'A senha deve ter pelo menos 6 caracteres')
+    .max(50, 'Senha muito longa')
+    .refine((pass) => /[0-9]/.test(pass), {
+      message: 'A senha deve conter pelo menos um número',
+    }),
+});
 
 export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
+  const [serverError, setServerError] = useState<boolean | string>(false);
   const { addToast } = useToast();
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: 'Refu',
+      email: 'renanfreitas.contato@gmail.com',
+      password: 'teste123',
+    },
+  });
+
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
-  } = useForm<FormData>();
-  const [serverError, setServerError] = useState<boolean | string>(false);
-  const [sending, setSending] = useState(false);
+    setError,
+  } = form;
 
-  async function submitForm(data: FormData) {
+  const onSuccess = () => {
+    reset();
+    addToast('Conta criada com sucesso!');
+  };
+
+  async function submitForm(data: z.infer<typeof FormSchema>) {
     setServerError(false);
-    setSending(true);
 
     try {
-      const response = await api.post('/signup', data);
-
-      addToast('Conta criada com sucesso!');
-      reset();
+      await api.post('/signup', data);
+      onSuccess();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response;
 
         if (status === 400) {
-          console.error('Validation Error:', data.message);
-          if (data.error) {
-            console.error('Validation Details:', data.error);
-          }
+          console.error('Bad Request:', data.message);
+          if (data.error) console.error(data.error);
 
           setServerError(true);
         } else if (status === 409) {
           console.error('Conflict Error:', data.message);
 
           if (data.message.includes('email address already exists')) {
-            setServerError('Este email ja existe no sistema');
+            setError('email', { message: 'Este email ja existe no sistema' });
           } else {
             setServerError(true);
           }
@@ -61,106 +85,84 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
         setServerError(true);
       }
     }
-
-    setSending(false);
   }
 
   return (
     <Form.Root
       className="space-y-4"
       onSubmit={handleSubmit(submitForm)}
-      {...props}
       ref={ref}
+      {...props}
     >
-      <Form.Field name="name">
-        <Form.Label>Nome</Form.Label>
+      <Form.Field name="name" serverInvalid={!!errors.name}>
+        <Form.Label className="mb-1 flex items-center gap-2">
+          <UserRectangle className="size-5 opacity-80" /> Nome
+        </Form.Label>
         <Form.Control asChild>
           <input
-            {...register('name', {
-              required: {
-                value: true,
-                message: 'Nome obrigatório',
-              },
-              minLength: {
-                value: 3,
-                message: 'Nome muito curto',
-              },
-              maxLength: {
-                value: 30,
-                message: 'Nome muito longo',
-              },
-            })}
-            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none"
+            {...register('name')}
+            className="mb-1 inline-block w-full appearance-none px-3 py-2 leading-none"
             type="text"
             placeholder="Seu nome"
             autoComplete="off"
           />
         </Form.Control>
-        {errors.name && <p className="text-red-600">{errors.name.message}</p>}
+        {errors.name && (
+          <Form.Message className="error-text">
+            {errors.name.message}
+          </Form.Message>
+        )}
       </Form.Field>
-
-      <Form.Field name="email">
-        <Form.Label>Email</Form.Label>
+      <Form.Field name="email" serverInvalid={!!errors.email}>
+        <Form.Label className="mb-1 flex items-center gap-2">
+          <Envelope className="size-5 opacity-80" /> Email
+        </Form.Label>
         <Form.Control asChild>
           <input
-            {...register('email', {
-              required: {
-                value: true,
-                message: 'Email obrigatório',
-              },
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Email inválido',
-              },
-            })}
-            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none"
+            {...register('email')}
+            className="mb-1 inline-block w-full appearance-none px-3 py-2 leading-none"
             type="email"
-            placeholder="email@exemplo.com"
+            placeholder="seuemail@exemplo.com"
             autoComplete="off"
           />
         </Form.Control>
-        {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+        {errors.email && (
+          <Form.Message className="error-text">
+            {errors.email.message}
+          </Form.Message>
+        )}
       </Form.Field>
 
-      <Form.Field name="password">
-        <Form.Label>Senha</Form.Label>
+      <Form.Field name="password" serverInvalid={!!errors.password}>
+        <Form.Label className="mb-1 flex items-center gap-2">
+          <Key className="size-5 opacity-80" /> Senha
+        </Form.Label>
         <Form.Control asChild>
           <input
-            {...register('password', {
-              required: {
-                value: true,
-                message: 'Insira uma senha',
-              },
-              minLength: {
-                value: 6,
-                message: 'A senha deve ter no mínimo 6 caracteres',
-              },
-              maxLength: {
-                value: 50,
-                message: 'Senha muito longa',
-              },
-            })}
-            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none"
+            {...register('password')}
+            className="mb-1 inline-block w-full appearance-none px-3 py-2 leading-none"
             type="password"
+            placeholder="senha123"
+            autoComplete="off"
           />
         </Form.Control>
         {errors.password && (
-          <p className="text-red-600">{errors.password.message}</p>
+          <Form.Message className="error-text">
+            {errors.password.message}
+          </Form.Message>
         )}
       </Form.Field>
 
       <Form.Submit
-        className="w-full bg-purple-600/60 px-4 py-2 disabled:opacity-60"
-        disabled={sending}
+        className="w-full bg-purple-600/60 px-4 py-2 duration-100 hover:brightness-110 disabled:opacity-60"
+        disabled={isSubmitting}
       >
         Entrar
       </Form.Submit>
 
       {serverError && (
-        <p className="text-red-600">
-          {typeof serverError === 'string'
-            ? serverError
-            : 'Erro ao cadastrar, tente novamente mais tarde.'}
+        <p className="error-text">
+          Erro ao realizar login, tente novamente mais tarde.
         </p>
       )}
     </Form.Root>

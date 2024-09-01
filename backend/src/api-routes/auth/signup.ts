@@ -5,11 +5,12 @@ import z from 'zod';
 import bcrypt from 'bcrypt';
 
 const bodySchema = z.object({
-  name: z.string().min(3),
+  name: z.string().min(3).max(32),
   email: z.string().email(),
   password: z
     .string()
     .min(6)
+    .max(50)
     .refine((pass) => /[0-9]/.test(pass), {
       message: 'Password must contain at least one number.',
     }),
