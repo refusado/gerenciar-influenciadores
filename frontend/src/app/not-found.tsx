@@ -20,7 +20,7 @@ export default function NotFound() {
     <>
       <Header />
       <main
-        className="flex-center container animate-fade animate-duration-300"
+        className="container flex animate-fade items-center justify-center animate-duration-300"
         style={{
           height: `calc(100vh - ${headerBottom}px)`,
         }}
