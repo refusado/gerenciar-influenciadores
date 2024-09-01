@@ -22,6 +22,9 @@ export function Navigate() {
         case 'logout':
           addToast('Sessão encerrada.');
           break;
+        case 'login':
+          addToast('Login realizado com sucesso.');
+          break;
       }
     }
   }, [params, router]);

@@ -1,22 +1,8 @@
-'use client';
-
 import * as Tabs from '@radix-ui/react-tabs';
 import { LoginForm } from './form-login';
 import { SignupForm } from './form-signup';
 
 export default function Login() {
-  async function logout() {
-    const response = await fetch('http://localhost:3333/api/logout', {
-      method: 'delete',
-      credentials: 'include',
-    });
-
-    if (response.ok) {
-      console.log('done');
-      window.location.href = '/';
-    }
-  }
-
   return (
     <main className="container animate-fade animate-duration-300">
       <h1>Entrar</h1>
@@ -44,18 +30,14 @@ export default function Login() {
           </Tabs.Trigger>
         </Tabs.List>
         <div className="bg-zinc-200/5 p-4">
-          <Tabs.Content value="login">
+          <Tabs.Content value="login" tabIndex={-1}>
             <LoginForm />
           </Tabs.Content>
-          <Tabs.Content value="signup">
+          <Tabs.Content value="signup" tabIndex={-1}>
             <SignupForm />
           </Tabs.Content>
         </div>
       </Tabs.Root>
-
-      <button className="mt-4 bg-red-700/70 px-4 py-2" onClick={logout}>
-        Sair
-      </button>
     </main>
   );
 }

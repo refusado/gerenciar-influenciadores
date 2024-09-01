@@ -32,7 +32,10 @@ h1 {
   @apply font-medium text-3xl sm:text-4xl mb-6;
 }
 
-/* styles.css */
+input {
+  @apply outline-none focus-visible:outline-none focus-visible:ring-2 duration-150;
+}
+
 .ToastRoot[data-swipe='move'] {
   transform: translateX(var(--radix-toast-swipe-move-x));
 }

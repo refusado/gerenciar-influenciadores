@@ -31,41 +31,34 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
     try {
       const response = await api.post('/signup', data);
 
-      console.log('Admin created successfully:', response.data);
       addToast('Conta criada com sucesso!');
       reset();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          const { status, data } = error.response;
+      if (axios.isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
 
-          if (status === 400) {
-            console.error('Validation Error:', data.message);
-            if (data.error) {
-              console.error('Validation Details:', data.error);
-            }
+        if (status === 400) {
+          console.error('Validation Error:', data.message);
+          if (data.error) {
+            console.error('Validation Details:', data.error);
+          }
 
-            setServerError(true);
-          } else if (status === 409) {
-            console.error('Conflict Error:', data.message);
+          setServerError(true);
+        } else if (status === 409) {
+          console.error('Conflict Error:', data.message);
 
-            if (data.message.includes('email address already exists')) {
-              setServerError('Este email ja existe no sistema');
-            } else {
-              setServerError(true);
-            }
+          if (data.message.includes('email address already exists')) {
+            setServerError('Este email ja existe no sistema');
           } else {
-            console.error(`Unexpected Error (Status ${status}):`, data.message);
             setServerError(true);
           }
         } else {
-          console.error(
-            'Network Error or Server did not respond:',
-            error.message,
-          );
+          console.error(`Unexpected Error (Status ${status}):`, data.message);
+          setServerError(true);
         }
       } else {
         console.error('Unexpected Error:', error);
+        setServerError(true);
       }
     }
 
@@ -97,7 +90,7 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
                 message: 'Nome muito longo',
               },
             })}
-            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none outline-none"
+            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none"
             type="text"
             placeholder="Seu nome"
             autoComplete="off"
@@ -120,7 +113,7 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
                 message: 'Email inválido',
               },
             })}
-            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none outline-none"
+            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none"
             type="email"
             placeholder="email@exemplo.com"
             autoComplete="off"
@@ -147,7 +140,7 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
                 message: 'Senha muito longa',
               },
             })}
-            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none outline-none"
+            className="inline-flex w-full appearance-none items-center justify-center px-3 py-2 leading-none"
             type="password"
           />
         </Form.Control>
