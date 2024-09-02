@@ -1,10 +1,10 @@
-import bcrypt from 'bcrypt';
-import { describe, expect, it, beforeEach, afterAll, beforeAll } from 'vitest';
 import { app } from '@/app';
-import request from 'supertest';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import request from 'supertest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 describe('Signup API routes', () => {
   beforeAll(async () => {
@@ -18,9 +18,7 @@ describe('Signup API routes', () => {
 
   // cleaning the database before starting a new test
   beforeEach(async () => {
-    await prisma.$executeRaw`PRAGMA foreign_keys = OFF;`;
-    await prisma.$executeRaw`DELETE FROM "Admin";`;
-    await prisma.$executeRaw`PRAGMA foreign_keys = ON;`;
+    await prisma.admin.deleteMany({});
   });
 
   it('should successfully create new admin', async () => {

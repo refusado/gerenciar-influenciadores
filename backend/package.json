@@ -4,8 +4,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch --env-file .env.dev src/server.ts",
-    "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate-dev": "prisma migrate dev",
+    "db:studio": "prisma studio",
     "build": "tsup src/server.ts --format cjs,esm --clean --shims",
     "start": "node --env-file .env dist/server.mjs",
     "lint": "eslint --ext .ts src",

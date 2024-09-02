@@ -3,7 +3,7 @@ import { fastifyCors } from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
 import fastify from 'fastify';
 import { apiRoutes } from './api-routes';
-import env from './env';
+import env from './utils/env';
 import { viewRoutes } from './view-handler';
 
 export const app = fastify();
