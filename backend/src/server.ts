@@ -8,7 +8,7 @@ app.listen({ port: env.PORT, host: '0.0.0.0' }, (err) => {
   }
 
   console.log(`Server is running on port ${env.PORT}.`);
-  // console.log(`URL: ${env.BASE_URL}`);
+  console.log(`URL: ${env.BASE_URL}`);
 });
 
 const gracefullyShutdown = async () => {
