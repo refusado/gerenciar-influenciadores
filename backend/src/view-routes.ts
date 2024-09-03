@@ -52,7 +52,7 @@ export async function viewRoutes(app: FastifyInstance) {
       return reply.redirect(`${env.BASE_URL}/?redirect=${request.url}`);
     }
 
-    if (pathExists('404.html')) {
+    if (!urlPath.startsWith('/api') && pathExists('404.html')) {
       return reply.sendFile('404.html', clientRoot);
     }
 

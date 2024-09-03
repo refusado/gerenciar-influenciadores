@@ -1,9 +1,9 @@
 import { prisma } from '@/utils/prisma';
+import { uploadImage } from '@/utils/upload-image';
+import { getAddressByCep } from '@/utils/viacep';
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
-
-// todo: separete routes in different files
 
 const influencerRequestSchema = z.object({
   name: z.string().min(3),
@@ -11,7 +11,9 @@ const influencerRequestSchema = z.object({
   reach: z.number(),
   instagram: z.string(),
   image: z.string(),
-  cep: z.string(),
+  cep: z.string().length(8).regex(/^\d+$/, {
+    message: 'CEP must contain only numbers',
+  }),
 });
 
 const influencerResponseSchema = z.object({
@@ -37,7 +39,7 @@ export async function influencerRoutes(app: FastifyInstance) {
       schema: {
         summary: 'Creates a new influencer',
         tags: ['influencer'],
-        body: influencerRequestSchema,
+        // body: influencerRequestSchema,
         response: {
           201: z.object({
             createdInfluencer: influencerResponseSchema,
@@ -50,8 +52,26 @@ export async function influencerRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
+      const parts = request.parts();
+
+      let jsonData = '';
+      let imageFileName = '';
+
+      for await (const part of parts) {
+        if (part.fieldname === 'data') {
+          if ('value' in part) {
+            const value = part.value as string;
+            jsonData = JSON.parse(value.toString());
+          }
+        } else if (part.fieldname === 'image' && part.type === 'file') {
+          imageFileName = await uploadImage(part);
+        }
+      }
+
+      const parsedData = influencerRequestSchema.parse(jsonData);
+
       const existingInfluencer = await prisma.influencer.findUnique({
-        where: { instagram: request.body.instagram },
+        where: { instagram: parsedData.instagram },
       });
 
       if (existingInfluencer)
@@ -59,14 +79,22 @@ export async function influencerRoutes(app: FastifyInstance) {
           message: 'Influencer already exists.',
         });
 
-      const influencerData = {
-        ...request.body,
+      const address = await getAddressByCep(parsedData.cep);
+      if (!address) throw new Error('Internal server error');
 
-        // todo: get values from viacep api
-        state: 'todo',
-        city: 'todo',
-        neighborhood: 'todo',
-        street: 'todo',
+      if ('error' in address) {
+        return reply.status(400).send({
+          message: `Error searching for CEP: ${address.error}`,
+        });
+      }
+
+      const influencerData = {
+        ...parsedData,
+        image: imageFileName,
+        state: address.data.estado,
+        city: address.data.localidade,
+        neighborhood: address.data.bairro,
+        street: address.data.logradouro,
       };
 
       const influencer = await prisma.influencer.create({
@@ -145,7 +173,7 @@ export async function influencerRoutes(app: FastifyInstance) {
         params: z.object({
           id: z.coerce.number(),
         }),
-        body: influencerRequestSchema,
+        body: influencerRequestSchema.strict().partial(),
         response: {
           200: z.object({
             updatedInfluencer: influencerResponseSchema,
@@ -162,14 +190,61 @@ export async function influencerRoutes(app: FastifyInstance) {
 
       const existingInfluencer = await prisma.influencer.findUnique({
         where: { id },
+        select: {
+          name: true,
+          niche: true,
+          reach: true,
+          instagram: true,
+          image: true,
+          cep: true,
+          state: true,
+          city: true,
+          neighborhood: true,
+          street: true,
+        },
       });
 
       if (!existingInfluencer)
         return reply.status(404).send({ message: 'Influencer not found.' });
 
+      let newAddress = {
+        state: existingInfluencer.state,
+        city: existingInfluencer.city,
+        neighborhood: existingInfluencer.neighborhood,
+        street: existingInfluencer.street,
+      };
+
+      if (request.body.cep) {
+        const address = await getAddressByCep(request.body.cep);
+        if (!address) throw new Error('Internal server error');
+
+        if ('error' in address) {
+          const statusMap = {
+            notFound: 404,
+            invalidFormat: 400,
+            unknown: 500,
+          };
+          const status = statusMap[address.error];
+          return reply.status(status).send({
+            message: address.error,
+          });
+        }
+
+        newAddress = {
+          state: address.data.uf,
+          city: address.data.localidade,
+          neighborhood: address.data.bairro,
+          street: address.data.logradouro,
+        };
+      }
+
       const influencer = await prisma.influencer.update({
         where: { id },
-        data: request.body,
+        data: {
+          ...existingInfluencer,
+          ...newAddress,
+          ...request.body,
+        },
       });
 
       return reply.send({ updatedInfluencer: influencer });

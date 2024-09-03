@@ -37,17 +37,23 @@ app.decorate(
       }
     }
 
-    const loggedAdmin = app.jwt.verify<{
-      id: number;
-      name: string;
-      email: string;
-    }>(token);
+    let loggedAdmin;
 
-    if (!loggedAdmin) {
+    try {
+      loggedAdmin = app.jwt.verify<{
+        id: number;
+        name: string;
+        email: string;
+      }>(token);
+    } catch (error) {
+      if (env.NODE_ENV === 'development') {
+        console.log(error);
+      }
+
       if (request.url.startsWith('/api')) {
         return reply.status(401).send({ message: 'invalid token' });
       } else {
-        return reply.redirect('/login?message=invalid_token');
+        return reply.redirect('/login?message=unauthorized');
       }
     }
 

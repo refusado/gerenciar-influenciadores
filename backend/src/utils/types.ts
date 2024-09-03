@@ -5,6 +5,7 @@ import { JWT } from '@fastify/jwt';
 declare module 'fastify' {
   interface FastifyRequest {
     jwt: JWT;
+    influencer: { id: number; name: string; email: string };
   }
 
   export interface FastifyInstance {
