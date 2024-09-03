@@ -1,12 +1,21 @@
 import { prisma } from '@/utils/prisma';
+import bcrypt from 'bcrypt';
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
-import z from 'zod';
-import bcrypt from 'bcrypt';
+import { z } from 'zod';
 
-const bodySchema = z.object({
+const loginRequestSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1).max(50),
+});
+
+const loginResponseSchema = z.object({
+  message: z.string(),
+  loggedAdmin: z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string().email(),
+  }),
 });
 
 export async function loginAdmin(app: FastifyInstance) {
@@ -14,16 +23,11 @@ export async function loginAdmin(app: FastifyInstance) {
     '/login',
     {
       schema: {
-        body: bodySchema,
+        summary: 'Admin login',
+        tags: ['auth'],
+        body: loginRequestSchema,
         response: {
-          200: z.object({
-            message: z.string(),
-            loggedAdmin: z.object({
-              id: z.number(),
-              name: z.string(),
-              email: z.string().email(),
-            }),
-          }),
+          200: loginResponseSchema,
           400: z.object({
             message: z.string(),
             error: z.any().optional(),
@@ -36,13 +40,14 @@ export async function loginAdmin(app: FastifyInstance) {
 
       const admin = await prisma.admin.findUnique({ where: { email } });
 
-      if (!admin)
+      if (!admin) {
         return reply.status(404).send({
           message: 'This email address does not exist.',
         });
+      }
 
-      const isPasswordCorret = await bcrypt.compare(password, admin.password);
-      if (!isPasswordCorret) {
+      const isPasswordCorrect = await bcrypt.compare(password, admin.password);
+      if (!isPasswordCorrect) {
         return reply.status(401).send({
           message: 'Incorrect password.',
         });

@@ -5,6 +5,7 @@ import fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import { apiRoutes } from './api-routes';
 import env from './utils/env';
 import { viewRoutes } from './view-routes';
+import { swaggerDocs } from './docs';
 
 export const app = fastify();
 
@@ -51,6 +52,8 @@ app.decorate(
     request.user = loggedAdmin;
   }
 );
+
+swaggerDocs(app); // this generates docs for everything
 
 app.register(viewRoutes);
 app.register(apiRoutes, { prefix: '/api' });

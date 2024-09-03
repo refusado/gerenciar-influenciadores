@@ -22,6 +22,9 @@ export async function viewRoutes(app: FastifyInstance) {
     '/admin',
     {
       preHandler: [app.authenticate],
+      schema: {
+        hide: true,
+      },
     },
     async (request, reply) => {
       if (pathExists('admin.html')) {

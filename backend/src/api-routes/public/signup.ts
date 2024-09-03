@@ -1,10 +1,10 @@
 import { prisma } from '@/utils/prisma';
+import bcrypt from 'bcrypt';
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
-import z from 'zod';
-import bcrypt from 'bcrypt';
+import { z } from 'zod';
 
-const bodySchema = z.object({
+const signupRequestSchema = z.object({
   name: z.string().min(3).max(32),
   email: z.string().email(),
   password: z
@@ -16,20 +16,24 @@ const bodySchema = z.object({
     }),
 });
 
+const signupResponseSchema = z.object({
+  createdAdmin: z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string().email(),
+  }),
+});
+
 export async function signupAdmin(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/signup',
     {
       schema: {
-        body: bodySchema,
+        summary: 'Admin signup',
+        tags: ['auth'],
+        body: signupRequestSchema,
         response: {
-          201: z.object({
-            createdAdmin: z.object({
-              id: z.number(),
-              name: z.string(),
-              email: z.string().email(),
-            }),
-          }),
+          201: signupResponseSchema,
           400: z.object({
             message: z.string(),
             error: z.any().optional(),
@@ -53,7 +57,7 @@ export async function signupAdmin(app: FastifyInstance) {
         data: { name, email, password: passwordHash },
       });
 
-      reply.status(201).send({
+      return reply.status(201).send({
         createdAdmin: {
           id: createdAdmin.id,
           name: createdAdmin.name,
