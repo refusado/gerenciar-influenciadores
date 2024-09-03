@@ -18,21 +18,23 @@ export async function viewRoutes(app: FastifyInstance) {
   };
 
   // for admin routes we need to check if the client is logged in
-  app.get('/admin', async (request, reply) => {
-    const token = request.cookies.access_token;
+  app.get(
+    '/admin',
+    {
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      if (pathExists('admin.html')) {
+        return reply.sendFile('admin.html', clientRoot);
+      }
 
-    if (!token) return reply.redirect('/login?message=unauthorized');
+      if (pathExists('404.html')) {
+        return reply.sendFile('404.html', clientRoot);
+      }
 
-    if (pathExists('admin.html')) {
-      return reply.sendFile('admin.html', clientRoot);
+      return reply.code(404).send({ error: 'Page not found' });
     }
-
-    if (pathExists('404.html')) {
-      return reply.sendFile('404.html', clientRoot);
-    }
-
-    return reply.code(404).send({ error: 'Page not found' });
-  });
+  );
 
   // this redirect to the spa if the route is not found
   // obs.: once nextjs makes the routing system in the client side, all spa

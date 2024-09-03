@@ -3,6 +3,8 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
+// todo: separete routes in different files
+
 export async function influencerBrandLinkRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/influencer-brand-connection',

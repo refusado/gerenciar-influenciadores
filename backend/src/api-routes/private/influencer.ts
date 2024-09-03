@@ -5,15 +5,6 @@ import { z } from 'zod';
 
 // todo: separete routes in different files
 
-// {
-//   "name": "Refu",
-//   "niche": "TI",
-//   "reach": 1000,
-//   "instagram": "refu",
-//   "image": "/some-unique-image.png",
-//   "cep": "12345678"
-// }
-
 const influencerRequestSchema = z.object({
   name: z.string().min(3),
   niche: z.string(),

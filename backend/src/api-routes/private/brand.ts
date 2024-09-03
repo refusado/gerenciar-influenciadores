@@ -3,6 +3,8 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
+// todo: separete routes in different files
+
 const brandRequestSchema = z.object({
   name: z.string().min(3),
   description: z.string(),

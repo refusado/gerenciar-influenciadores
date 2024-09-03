@@ -3,7 +3,7 @@ import { loginAdmin } from './login';
 import { logoutAdmin } from './logout';
 import { signupAdmin } from './signup';
 
-export async function authRoutes(app: FastifyInstance) {
+export async function publicRoutes(app: FastifyInstance) {
   app.register(signupAdmin);
   app.register(loginAdmin);
   app.register(logoutAdmin);
