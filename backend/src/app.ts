@@ -6,6 +6,7 @@ import { apiRoutes } from './api-routes';
 import env from './utils/env';
 import { viewRoutes } from './view-routes';
 import { swaggerDocs } from './docs';
+import fastifyMultipart from '@fastify/multipart';
 
 export const app = fastify();
 
@@ -14,6 +15,7 @@ app.register(fastifyCors, {
   credentials: true,
 });
 
+app.register(fastifyMultipart);
 app.register(fastifyCookie, { secret: 'secret' });
 app.register(fastifyJwt, { secret: env.JWT_SECRET });
 
