@@ -8,6 +8,7 @@ import {
 import { authRoutes } from './auth';
 import { influencerRoutes } from './influencer';
 import { brandRoutes } from './brand';
+import { influencerBrandLinkRoutes } from './influencer-brand';
 
 export async function apiRoutes(app: FastifyInstance) {
   app.setErrorHandler(errorHandler);
@@ -20,4 +21,5 @@ export async function apiRoutes(app: FastifyInstance) {
   app.register(authRoutes);
   app.register(influencerRoutes);
   app.register(brandRoutes);
+  app.register(influencerBrandLinkRoutes);
 }
