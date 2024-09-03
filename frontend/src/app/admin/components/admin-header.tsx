@@ -29,7 +29,6 @@ export function AdminHeader() {
               tabIndex={pathsMatch ? -1 : 1}
               className="px-6 py-2 first:rounded-l-full last:rounded-r-full hover:bg-white/10 hover:no-underline data-[disabled='true']:pointer-events-none data-[disabled='true']:cursor-default data-[disabled='true']:opacity-70"
               href={{
-                host: host,
                 pathname: path,
               }}
             >

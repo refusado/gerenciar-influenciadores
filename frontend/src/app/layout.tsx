@@ -21,15 +21,15 @@ export default function RootLayout({
         className="bg-zinc-900 text-zinc-50"
         style={{ marginRight: '0px !important' }}
       >
-        <ModalProvider>
-          <ToastProvider>
+        <ToastProvider>
+          <ModalProvider>
             {children}
 
             <Suspense>
               <Navigate />
             </Suspense>
-          </ToastProvider>
-        </ModalProvider>
+          </ModalProvider>
+        </ToastProvider>
       </body>
     </html>
   );
