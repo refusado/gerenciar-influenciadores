@@ -6,6 +6,7 @@ import {
 } from 'fastify-type-provider-zod';
 
 import { authRoutes } from './auth';
+import { influencerRoutes } from './influencer';
 
 export async function apiRoutes(app: FastifyInstance) {
   app.setErrorHandler(errorHandler);
@@ -16,4 +17,5 @@ export async function apiRoutes(app: FastifyInstance) {
   app.get('/health', async (_, reply) => reply.send({ success: true }));
 
   app.register(authRoutes);
+  app.register(influencerRoutes);
 }

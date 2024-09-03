@@ -18,7 +18,7 @@ model Influencer {
   id        Int    @id @default(autoincrement())
   name      String
   niche     String
-  reach     String
+  reach     Int
   instagram String @unique
   image     String
 
