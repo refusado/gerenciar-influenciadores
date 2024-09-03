@@ -2,7 +2,7 @@
 
 import { api } from '@/utils/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Envelope, Key } from '@phosphor-icons/react';
+import { Envelope, Key } from '@phosphor-icons/react/dist/ssr';
 import * as Form from '@radix-ui/react-form';
 import axios from 'axios';
 import { forwardRef, useState } from 'react';

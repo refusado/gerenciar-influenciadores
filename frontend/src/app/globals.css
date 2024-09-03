@@ -16,12 +16,16 @@
   @apply ring-purple-600 selection:bg-purple-600/60;
 }
 
-button, a {
+button, a, div[data-radix-collection-item=""] {
   @apply outline-none focus-visible:outline-none focus-visible:ring-2 duration-150;
 }
 
+div[data-radix-collection-item=""] {
+  @apply ring-inset
+}
+
 h1 {
-  @apply font-medium text-3xl sm:text-4xl mb-6;
+  @apply font-medium text-2xl sm:text-4xl mb-6;
 }
 
 .error-text {

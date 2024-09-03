@@ -3,6 +3,7 @@ import './globals.css';
 import { ToastProvider } from '@/components/toast';
 import { Navigate } from '@/components/navigate';
 import { Suspense } from 'react';
+import { ModalProvider } from '@/hooks/useModal';
 
 const sans = FontSans({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -16,14 +17,19 @@ export default function RootLayout({
       lang="pt"
       className={`overflow-x-hidden overflow-y-scroll ${sans.variable}`}
     >
-      <body className="bg-zinc-900 text-zinc-50">
-        <ToastProvider>
-          {children}
+      <body
+        className="bg-zinc-900 text-zinc-50"
+        style={{ marginRight: '0px !important' }}
+      >
+        <ModalProvider>
+          <ToastProvider>
+            {children}
 
-          <Suspense>
-            <Navigate />
-          </Suspense>
-        </ToastProvider>
+            <Suspense>
+              <Navigate />
+            </Suspense>
+          </ToastProvider>
+        </ModalProvider>
       </body>
     </html>
   );
