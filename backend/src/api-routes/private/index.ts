@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { brandRoutes } from './brand';
-import { influencerRoutes } from './influencer';
 import { influencerBrandLinkRoutes } from './influencer-brand';
+import { influencerRoutes } from './influencer/routes';
 
 export async function privateRoutes(app: FastifyInstance) {
   app.addHook('preHandler', app.authenticate);

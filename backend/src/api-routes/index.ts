@@ -4,7 +4,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import { privateRoutes } from './private/_index';
+import { privateRoutes } from './private';
 import { publicRoutes } from './public/_index';
 import { swaggerDocs } from '@/docs';
 import z from 'zod';
