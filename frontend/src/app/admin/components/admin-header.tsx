@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { env } from 'process';
 
-let host = env.NEXT_PUBLIC_HOST;
-
 export function AdminHeader() {
   const currentPath = usePathname();
 
@@ -28,9 +26,7 @@ export function AdminHeader() {
               aria-disabled={pathsMatch}
               tabIndex={pathsMatch ? -1 : 1}
               className="px-6 py-2 first:rounded-l-full last:rounded-r-full hover:bg-white/10 hover:no-underline data-[disabled='true']:pointer-events-none data-[disabled='true']:cursor-default data-[disabled='true']:opacity-70"
-              href={{
-                pathname: path,
-              }}
+              href={path}
             >
               {title}
             </Link>

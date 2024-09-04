@@ -1,5 +1,13 @@
 export function TableHeader() {
-  const headers = ['#', 'Nome', 'Instagram', 'Bairro', 'Nicho', 'Alcance'];
+  const headers = [
+    '#',
+    'Nome',
+    'Instagram',
+    'Bairro',
+    'Nicho',
+    'Alcance',
+    'Cadastrado',
+  ];
 
   return (
     <thead>
