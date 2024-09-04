@@ -1,12 +1,14 @@
 import fastifyCookie from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
+import fastifyMultipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
 import fastify, { FastifyReply, FastifyRequest } from 'fastify';
+import path from 'path';
 import { apiRoutes } from './api-routes';
+import { swaggerDocs } from './docs';
 import env from './utils/env';
 import { viewRoutes } from './view-routes';
-import { swaggerDocs } from './docs';
-import fastifyMultipart from '@fastify/multipart';
 
 export const app = fastify();
 
@@ -15,7 +17,13 @@ app.register(fastifyCors, {
   credentials: true,
 });
 
-app.register(fastifyMultipart);
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+    files: 1,
+    fieldNameSize: 100,
+  },
+});
 app.register(fastifyCookie, { secret: 'secret' });
 app.register(fastifyJwt, { secret: env.JWT_SECRET });
 
@@ -65,3 +73,9 @@ swaggerDocs(app); // this generates docs for everything
 
 app.register(viewRoutes);
 app.register(apiRoutes, { prefix: '/api' });
+
+// serve uploaded images from uploads/images to a /img/ route
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '../uploads/images'),
+  prefix: '/img/',
+});

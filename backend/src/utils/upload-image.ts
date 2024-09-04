@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function uploadImage(file: MultipartFile): Promise<string> {
   const uploadDir = 'uploads/images';
-  const allowedTypes = ['image/jpeg', 'image/png'];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
   if (!file) {
     throw new Error('No file uploaded');
