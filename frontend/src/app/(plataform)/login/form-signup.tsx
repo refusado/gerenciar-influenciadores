@@ -1,7 +1,7 @@
 'use client';
 
-import { useToast } from '@/components/toast';
-import { api } from '@/utils/api';
+import authApi from '@/app/admin/api/authApi';
+import { useToast } from '@/hooks/useToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Envelope, Key, UserRectangle } from '@phosphor-icons/react/dist/ssr';
 import * as Form from '@radix-ui/react-form';
@@ -57,7 +57,7 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
     setServerError(false);
 
     try {
-      await api.post('/signup', data);
+      await authApi.register(data);
       onSuccess();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -157,7 +157,7 @@ export const SignupForm = forwardRef<HTMLFormElement>((props, ref) => {
         className="w-full bg-purple-600/60 px-4 py-2 duration-100 hover:brightness-110 disabled:opacity-60"
         disabled={isSubmitting}
       >
-        Entrar
+        Cadastrar
       </Form.Submit>
 
       {serverError && (

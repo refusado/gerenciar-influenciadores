@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export interface Influencer {
   id: number;
   name: string;
@@ -14,7 +16,7 @@ export interface Influencer {
   updateAt: string;
 }
 
-export interface GetInfluencersResponse {
+export interface AllInfluencersResponse {
   influencers: Influencer[];
   totalInfluencers: number;
   currentPage: number;
@@ -39,3 +41,35 @@ export interface InfluencerUpdateRequest {
   image?: string;
   cep?: string;
 }
+
+export const uniqueInfluencerResponseSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  niche: z.string(),
+  reach: z.number(),
+  instagram: z.string(),
+  image: z.string(),
+  cep: z.string(),
+  state: z.string(),
+  city: z.string(),
+  neighborhood: z.string(),
+  street: z.string(),
+  createdAt: z.date(),
+  updateAt: z.date(),
+  brands: z.array(
+    z.object({
+      brand: z.object({
+        id: z.number(),
+        name: z.string(),
+        description: z.string(),
+        niche: z.string(),
+        createdAt: z.date(),
+        updatedAt: z.date(),
+      }),
+    }),
+  ),
+});
+
+export type UniqueInfluencerResponse = z.infer<
+  typeof uniqueInfluencerResponseSchema
+>;

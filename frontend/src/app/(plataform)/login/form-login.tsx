@@ -1,6 +1,6 @@
 'use client';
 
-import { api } from '@/utils/api';
+import authApi from '@/app/admin/api/authApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Envelope, Key } from '@phosphor-icons/react/dist/ssr';
 import * as Form from '@radix-ui/react-form';
@@ -33,17 +33,13 @@ export const LoginForm = forwardRef<HTMLFormElement>((props, ref) => {
     setError,
   } = form;
 
-  const onSuccess = () => {
-    reset();
-    window.location.href = '/admin?message=login';
-  };
-
   async function submitForm(data: z.infer<typeof FormSchema>) {
     setServerError(false);
 
     try {
-      await api.post('/login', data);
-      return onSuccess();
+      await authApi.login(data);
+      reset();
+      window.location.href = '/admin?message=login';
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response;

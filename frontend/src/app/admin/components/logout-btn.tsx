@@ -1,6 +1,6 @@
 'use client';
 
-import { useToast } from '@/components/toast';
+import { useToast } from '@/hooks/useToast';
 import { SignOut } from '@phosphor-icons/react/dist/ssr';
 import { useState } from 'react';
 

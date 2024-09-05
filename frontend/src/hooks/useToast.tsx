@@ -27,12 +27,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map(({ id, message }) => (
           <RadixToast.Root
             key={id}
-            className="ToastRoot border-l-2 border-zinc-200 bg-zinc-700 px-5 py-3 shadow-md"
+            className="ToastRoot overflow-hidden rounded-sm bg-zinc-700 shadow-lg"
           >
-            {message}
+            <p className="size-full border-l-2 border-purple-200 bg-yellow-300/5 px-5 py-3">
+              {message}
+            </p>
           </RadixToast.Root>
         ))}
-        <RadixToast.Viewport className="fixed bottom-6 left-6 z-30 flex w-full max-w-[360px] flex-col gap-4" />
+        <RadixToast.Viewport className="fixed bottom-0 z-30 flex w-[clamp(280px,100vw,420px)] flex-col gap-4 p-6 sm:left-0" />
       </RadixToast.Provider>
     </toastContext.Provider>
   );

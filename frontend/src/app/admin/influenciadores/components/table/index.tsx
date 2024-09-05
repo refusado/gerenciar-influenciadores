@@ -5,13 +5,13 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { InfluencerTableActions } from './actions';
 import { TableHeader } from './header';
 import { InfluencerTableRow } from './row';
-import { GetInfluencersResponse, Influencer } from '@/types/influencer';
+import { AllInfluencersResponse, Influencer } from '@/types/influencer';
 import influencerApi from '@/app/admin/api/influencerApi';
 import { Pagination } from './pagination';
 
 const fetchInfluencers = async (
   page: number,
-): Promise<GetInfluencersResponse> => {
+): Promise<AllInfluencersResponse> => {
   const result = await influencerApi.getAllInfluencers({
     limit: 5,
     page,
@@ -22,7 +22,7 @@ const fetchInfluencers = async (
 export default function InfluencersTable() {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isFetching } = useQuery<GetInfluencersResponse>({
+  const { data } = useQuery<AllInfluencersResponse>({
     queryKey: ['influencers', page],
     queryFn: () => fetchInfluencers(page),
     placeholderData: keepPreviousData,
@@ -34,10 +34,7 @@ export default function InfluencersTable() {
   const limit = data?.limit || 5;
 
   return (
-    <section
-      className="mb-4 delay-150 duration-300 data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50"
-      data-loading={isLoading || isFetching}
-    >
+    <section className="mb-4">
       <div className="relative flex flex-col">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full p-1.5 align-middle">

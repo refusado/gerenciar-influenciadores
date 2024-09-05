@@ -1,6 +1,6 @@
 'use client';
 
-import { useToast } from '@/components/toast';
+import { useToast } from '@/hooks/useToast';
 import { useModal } from '@/hooks/useModal';
 import { Influencer } from '@/types/influencer';
 import {
@@ -31,7 +31,7 @@ export function InfluencerTableActions({
       ID: ${id}
       Nome: ${name}
       Instagram: @${instagram}
-      Cidade: ${neighborhood}
+      Bairro: ${neighborhood}
       CEP: ${cep}
       Nicho: ${niche}
       Alcance: ${reach}

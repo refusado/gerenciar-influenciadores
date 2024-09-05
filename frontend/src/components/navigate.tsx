@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { useToast } from './toast';
+import { useToast } from '@/hooks/useToast';
 
 export function Navigate() {
   const router = useRouter();

@@ -18,14 +18,14 @@ export function Pagination({
 }: PaginationProps) {
   return (
     <ArkPagination.Root
-      className="flex items-center justify-center gap-2 p-2 font-mono *:flex *:size-9 *:items-center *:justify-center *:rounded-sm *:border-[1px] *:border-zinc-800 *:bg-purple-950/10"
+      className="flex items-center justify-center gap-2 p-2 font-mono *:flex *:size-9 *:items-center *:justify-center *:rounded-sm *:border-zinc-800"
       count={data.totalInfluencers}
       pageSize={data.limit}
       siblingCount={1}
       page={currentPage}
       onPageChange={(info) => setPage(info.page)}
     >
-      <ArkPagination.PrevTrigger className="disabled:opacity-50">
+      <ArkPagination.PrevTrigger className="border-[1px] bg-purple-950/10 disabled:opacity-50">
         <CaretLeft className="size-5" />
       </ArkPagination.PrevTrigger>
       <ArkPagination.Context>
@@ -33,7 +33,7 @@ export function Pagination({
           pagination.pages.map((page, index) =>
             page.type === 'page' ? (
               <ArkPagination.Item
-                className="data-[selected]:pointer-events-none data-[selected]:cursor-default data-[selected]:border-transparent data-[selected]:opacity-40"
+                className="border-[1px] bg-purple-950/10 data-[selected]:pointer-events-none data-[selected]:cursor-default data-[selected]:border-transparent data-[selected]:opacity-40"
                 key={index}
                 {...page}
               >
@@ -51,7 +51,7 @@ export function Pagination({
           )
         }
       </ArkPagination.Context>
-      <ArkPagination.NextTrigger className="disabled:opacity-50">
+      <ArkPagination.NextTrigger className="border-[1px] bg-purple-950/10 disabled:opacity-50">
         <CaretRight className="size-5" />
       </ArkPagination.NextTrigger>
     </ArkPagination.Root>

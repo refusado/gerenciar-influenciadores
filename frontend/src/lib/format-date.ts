@@ -3,7 +3,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export function formatRelativeDate(isoDate: string): string {
+export function formatRelativeDate(isoDate: string | Date): string {
   const now = dayjs();
   const inputDate = dayjs(isoDate);
 
@@ -31,14 +31,14 @@ export function formatRelativeDate(isoDate: string): string {
   return 'agora';
 }
 
-export function formatDate(isoDate: string): string {
+export function formatDate(isoDate: string | Date): string {
   return dayjs(isoDate).format('DD/MM/YYYY');
 }
 
-export function formatDateTime(isoDate: string): string {
+export function formatDateTime(isoDate: string | Date): string {
   return dayjs(isoDate).format('DD/MM/YYYY HH:mm');
 }
 
-export function formatTime(isoDate: string): string {
+export function formatTime(isoDate: string | Date): string {
   return dayjs(isoDate).format('HH:mm');
 }

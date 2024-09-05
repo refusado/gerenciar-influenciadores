@@ -2,13 +2,10 @@ import { FileUpload } from '@ark-ui/react';
 import { Pencil, Trash, UploadSimple } from '@phosphor-icons/react/dist/ssr';
 import { forwardRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
-import { registerInfluencerSchema } from './register-form';
 
 export const ImageFileInput = forwardRef<HTMLInputElement>((props, ref) => {
   const [isSelected, setIsSelected] = useState(false);
-  const { setValue } =
-    useFormContext<z.infer<typeof registerInfluencerSchema>>();
+  const { setValue } = useFormContext();
 
   return (
     <FileUpload.Root
@@ -32,7 +29,7 @@ export const ImageFileInput = forwardRef<HTMLInputElement>((props, ref) => {
         >
           <UploadSimple className="size-10 opacity-50 duration-150 group-data-[dragging]:scale-110 group-data-[dragging]:opacity-70" />
           Solte um arquivo aqui
-          <FileUpload.Trigger className="bg-amber-500/60 px-3 py-1 text-white hover:bg-amber-500/70 group-data-[dragging]:opacity-70">
+          <FileUpload.Trigger className="rounded-full bg-amber-500/60 px-3 py-1 text-white hover:bg-amber-500/70 group-data-[dragging]:opacity-70">
             Escolher do meu dispositivo
           </FileUpload.Trigger>
         </FileUpload.Dropzone>
@@ -44,7 +41,7 @@ export const ImageFileInput = forwardRef<HTMLInputElement>((props, ref) => {
               <FileUpload.Item key={file.name} file={file}>
                 <FileUpload.ItemPreview
                   type="image/*"
-                  className="group/image relative w-[clamp(180px,94vw,340px)] overflow-hidden rounded-md border-2 border-zinc-800"
+                  className="group/image relative w-[clamp(160px,100%,280px)] overflow-hidden rounded-md shadow-md"
                 >
                   <div className="absolute top-2 mb-3 flex w-full gap-2 px-2 text-xs opacity-80 duration-500 *:rounded-full *:border-[1px] *:border-zinc-700/80 *:bg-zinc-950/90 *:px-2 *:py-1 group-hover/image:opacity-100">
                     <FileUpload.ItemName
