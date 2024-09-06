@@ -1,0 +1,59 @@
+import { Pagination as ArkPagination } from '@ark-ui/react';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react/dist/ssr';
+
+interface PaginationProps {
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  data: {
+    hasMore: boolean;
+    totalBrands: number;
+    limit: number;
+  };
+}
+
+export function Pagination({
+  page: currentPage,
+  setPage,
+  data,
+}: PaginationProps) {
+  return (
+    <ArkPagination.Root
+      className="flex items-center justify-center gap-2 p-2 font-mono *:flex *:size-9 *:items-center *:justify-center *:rounded-sm *:border-zinc-800"
+      count={data.totalBrands}
+      pageSize={data.limit}
+      siblingCount={1}
+      page={currentPage}
+      onPageChange={(info) => setPage(info.page)}
+    >
+      <ArkPagination.PrevTrigger className="border-[1px] bg-purple-950/10 disabled:opacity-50">
+        <CaretLeft className="size-5" />
+      </ArkPagination.PrevTrigger>
+      <ArkPagination.Context>
+        {(pagination) =>
+          pagination.pages.map((page, index) =>
+            page.type === 'page' ? (
+              <ArkPagination.Item
+                className="border-[1px] bg-purple-950/10 data-[selected]:pointer-events-none data-[selected]:cursor-default data-[selected]:border-transparent data-[selected]:opacity-40"
+                key={index}
+                {...page}
+              >
+                {page.value}
+              </ArkPagination.Item>
+            ) : (
+              <ArkPagination.Ellipsis
+                className="pointer-events-none flex size-9 select-none items-center justify-center font-mono"
+                key={index}
+                index={index}
+              >
+                &#8230;
+              </ArkPagination.Ellipsis>
+            ),
+          )
+        }
+      </ArkPagination.Context>
+      <ArkPagination.NextTrigger className="border-[1px] bg-purple-950/10 disabled:opacity-50">
+        <CaretRight className="size-5" />
+      </ArkPagination.NextTrigger>
+    </ArkPagination.Root>
+  );
+}

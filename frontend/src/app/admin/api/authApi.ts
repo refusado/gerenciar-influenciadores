@@ -10,7 +10,7 @@ import {
 const authApi = {
   register: async (data: SignupRequest): Promise<SignupResponse> => {
     const response: AxiosResponse<SignupResponse> = await api.post(
-      '/influencer',
+      '/signup',
       data,
     );
     return response.data;

@@ -7,7 +7,7 @@ import {
   Trash,
   Unite,
 } from '@phosphor-icons/react/dist/ssr';
-import { InfluencerDetails } from '../influencer-details';
+import { InfluencerDetails } from './influencer-details';
 
 export function ViewInfluencerModal({ resource }: { resource: Influencer }) {
   const { openModal } = useModal();

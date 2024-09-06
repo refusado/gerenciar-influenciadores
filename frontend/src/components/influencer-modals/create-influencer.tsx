@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/useToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   At,
+  CaretDown,
   Crosshair,
   Eye,
   ImageSquare,
@@ -21,7 +22,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ImageFileInput } from '../image-input';
 import { registerInfluencerSchema } from './schemas/create-schema';
-import { niches } from './niches';
+import { niches } from '../niches';
 
 export const RegisterInfluencerForm = forwardRef<HTMLFormElement>(
   (props, ref) => {
@@ -201,21 +202,24 @@ export const RegisterInfluencerForm = forwardRef<HTMLFormElement>(
                 <Form.Label className="mb-1 flex items-center gap-2">
                   <Crosshair className="size-5 opacity-80" /> Nicho
                 </Form.Label>
-                <Form.Control asChild>
-                  <select
-                    {...register('niche')}
-                    className="mb-1 inline-block w-full cursor-pointer appearance-none px-3 py-2 leading-normal hover:brightness-125"
-                  >
-                    <option value={''} defaultChecked>
-                      Selecione uma opção
-                    </option>
-                    {niches.map((niche, i) => (
-                      <option key={i} value={niche}>
-                        {niche}
+                <div className="relative mb-1 inline-flex h-max w-full items-center">
+                  <Form.Control asChild>
+                    <select
+                      {...register('niche')}
+                      className="inline-block w-full cursor-pointer appearance-none px-3 py-2 leading-normal hover:brightness-125"
+                    >
+                      <option value={''} defaultChecked>
+                        Selecione uma opção
                       </option>
-                    ))}
-                  </select>
-                </Form.Control>
+                      {niches.map((niche, i) => (
+                        <option key={i} value={niche}>
+                          {niche}
+                        </option>
+                      ))}
+                    </select>
+                  </Form.Control>
+                  <CaretDown className="absolute right-[0.75rem] size-5" />
+                </div>
                 {errors.niche && (
                   <Form.Message className="error-text">
                     {errors.niche.message}

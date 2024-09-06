@@ -12,9 +12,25 @@ export interface Influencer {
   city: string;
   neighborhood: string;
   street: string;
-  createdAt: string;
-  updateAt: string;
+  createdAt: Date;
+  updateAt: Date;
 }
+
+export const influencerResponseSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  niche: z.string(),
+  reach: z.number(),
+  instagram: z.string(),
+  image: z.string(),
+  cep: z.string(),
+  state: z.string(),
+  city: z.string(),
+  neighborhood: z.string(),
+  street: z.string(),
+  createdAt: z.date(),
+  updateAt: z.date(),
+});
 
 export interface AllInfluencersResponse {
   influencers: Influencer[];

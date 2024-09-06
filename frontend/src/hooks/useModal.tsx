@@ -1,10 +1,15 @@
 'use client';
 
+import { RegisterBrandForm } from '@/components/brand-modals/create-brand';
+import { DeleteBrandModal } from '@/components/brand-modals/delete-brand';
+import { UpdateBrandForm } from '@/components/brand-modals/update-brand';
+import { ViewBrandModal } from '@/components/brand-modals/view-brand';
 import { RegisterInfluencerForm } from '@/components/influencer-modals/create-influencer';
 import { DeleteInfluencerModal } from '@/components/influencer-modals/delete-influencer';
 import { LinkBrand } from '@/components/influencer-modals/link-brand';
 import { UpdateInfluencerForm } from '@/components/influencer-modals/update-influencer';
 import { ViewInfluencerModal } from '@/components/influencer-modals/view-influencer';
+import { BrandResponse } from '@/types/brand';
 import { Influencer } from '@/types/influencer';
 import { X } from '@phosphor-icons/react/dist/ssr';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -17,9 +22,14 @@ import {
 } from 'react';
 
 interface ModalContextType {
-  openModal: (modalName: string, resource?: Influencer) => void;
+  openModal: (
+    modalName: string,
+    resource?: Influencer,
+    brand?: BrandResponse,
+  ) => void;
   closeModal: () => void;
   resource?: Influencer;
+  brandData?: BrandResponse;
 }
 
 const ModalContext = createContext<ModalContextType | null>(null);
@@ -27,65 +37,117 @@ const ModalContext = createContext<ModalContextType | null>(null);
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [openModalName, setOpenModalName] = useState<string | null>(null);
   const [resource, setResource] = useState<Influencer | undefined>();
+  const [brandData, setBrandData] = useState<BrandResponse | undefined>();
 
-  const openModal = useCallback((modalName: string, resource?: Influencer) => {
-    setOpenModalName(modalName);
-    setResource(resource);
-  }, []);
+  const openModal = useCallback(
+    (modalName: string, influencer?: Influencer, brand?: BrandResponse) => {
+      if (influencer && brand)
+        throw new Error('openModal cannot receive both influencer AND brand');
+
+      // reset the modal content state before opening a new modal
+      setResource(undefined);
+      setBrandData(undefined);
+
+      setOpenModalName(modalName);
+      setResource(influencer);
+      setBrandData(brand);
+    },
+    [],
+  );
 
   const closeModal = useCallback(() => {
     setOpenModalName(null);
     setResource(undefined);
+    setBrandData(undefined);
   }, []);
 
+  // title e description are passed outside the modal content for accessibility
+  // reasons: https://www.radix-ui.com/primitives/docs/components/dialog#title
+  const MODALS = [
+    {
+      modalName: 'create-influencer',
+      title: 'Novo influenciador',
+      description: 'Cadastre um novo influenciador no sistema',
+      content: <RegisterInfluencerForm />,
+    },
+    {
+      modalName: 'view-influencer',
+      title: `Detalhes influenciador #${resource?.id}`,
+      description: 'Visualize as informações detalhadas do influenciador',
+      content: resource ? <ViewInfluencerModal resource={resource} /> : null,
+    },
+    {
+      modalName: 'edit-influencer',
+      title: `Atualizar influenciador #${resource?.id}`,
+      description: 'Edite as informações do influenciador',
+      content: resource ? (
+        <UpdateInfluencerForm
+          influencerId={resource?.id}
+          onCancel={() => openModal('view-influencer', resource)}
+        />
+      ) : null,
+    },
+    {
+      modalName: 'link-influencer',
+      title: `Conectar influenciador #${resource?.id}`,
+      description:
+        'Esta operação irá associar o influenciador a uma marca escolhida',
+      content: resource ? <LinkBrand resource={resource} /> : null,
+    },
+    {
+      modalName: 'delete-influencer',
+      title: `Excluir influenciador #${resource?.id}`,
+      description: 'Esta ação não poderá ser desfeita.',
+      content: resource ? <DeleteInfluencerModal resource={resource} /> : null,
+    },
+    {
+      modalName: 'create-brand',
+      title: 'Nova marca',
+      description: 'Cadastre uma nova marca no sistema',
+      content: <RegisterBrandForm />,
+    },
+    {
+      modalName: 'view-brand',
+      title: `Detalhes marca #${brandData?.id}`,
+      description: 'Visualize as informações detalhadas da marca',
+      content: brandData ? <ViewBrandModal brand={brandData} /> : null,
+    },
+    {
+      modalName: 'delete-brand',
+      title: `Excluir marca #${brandData?.id}`,
+      description:
+        'Verifique todas as informações antes de realizar a operação.',
+      content: brandData ? <DeleteBrandModal brand={brandData} /> : null,
+    },
+    {
+      modalName: 'edit-brand',
+      title: `Atualizar marca #${brandData?.id}`,
+      description: 'Edite as informações da marcda.',
+      content: brandData ? (
+        <UpdateBrandForm
+          brandId={brandData.id}
+          onCancel={() => openModal('view-brand', undefined, brandData)}
+        />
+      ) : null,
+    },
+  ];
+
   return (
-    <ModalContext.Provider value={{ openModal, closeModal, resource }}>
+    <ModalContext.Provider
+      value={{ openModal, closeModal, resource, brandData }}
+    >
       {children}
-
-      <ModalContainer
-        modalName="create-influencer"
-        open={openModalName === 'create-influencer'}
-        title="Novo influenciador"
-        description="Cadastre um novo influenciador no sistema"
-      >
-        <RegisterInfluencerForm />
-      </ModalContainer>
-
-      <ModalContainer
-        modalName="view-influencer"
-        open={openModalName === 'view-influencer'}
-        title={`Detalhes influenciador #${resource?.id}`}
-        description="Visualize as informações detalhadas do influenciador"
-      >
-        {resource && <ViewInfluencerModal resource={resource} />}
-      </ModalContainer>
-
-      <ModalContainer
-        modalName="edit-influencer"
-        open={openModalName === 'edit-influencer'}
-        title={`Atualizar influenciador #${resource?.id}`}
-        description="Edite as informações do influenciador"
-      >
-        {resource && <UpdateInfluencerForm influencerId={resource.id} />}
-      </ModalContainer>
-
-      <ModalContainer
-        modalName="link-influencer"
-        open={openModalName === 'link-influencer'}
-        title={`Conectar influenciador #${resource?.id}`}
-        description="Esta operação irá associar o influenciador a uma marca escolhida"
-      >
-        {resource && <LinkBrand resource={resource} />}
-      </ModalContainer>
-
-      <ModalContainer
-        modalName="delete-influencer"
-        open={openModalName === 'delete-influencer'}
-        title={`Excluir influenciador #${resource?.id}`}
-        description="Esta ação não poderá ser desfeita."
-      >
-        {resource && <DeleteInfluencerModal resource={resource} />}
-      </ModalContainer>
+      {MODALS.map(({ modalName, title, description, content }) => (
+        <ModalContainer
+          key={modalName}
+          modalName={modalName}
+          title={title}
+          description={description}
+          open={openModalName === modalName}
+        >
+          {content}
+        </ModalContainer>
+      ))}
     </ModalContext.Provider>
   );
 }

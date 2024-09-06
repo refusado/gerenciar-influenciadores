@@ -2,37 +2,35 @@
 
 import { useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { InfluencerTableActions } from './actions';
 import { TableHeader } from './header';
-import { InfluencerTableRow } from './row';
-import { AllInfluencersResponse, Influencer } from '@/types/influencer';
-import influencerApi from '@/app/admin/api/influencerApi';
+import { BrandTableRow } from './row';
 import { Pagination } from './pagination';
+import brandApi, { AllBrandsResponse } from '@/app/admin/api/brandApi';
+import { BrandTableActions } from './actions';
 
-const fetchInfluencers = async (
-  page: number,
-): Promise<AllInfluencersResponse> => {
-  const result = await influencerApi.getAllInfluencers({
+const fetchInfluencers = async (page: number): Promise<AllBrandsResponse> => {
+  const result = await brandApi.getAllBrands({
     limit: 5,
     page,
   });
+
   return result;
 };
 
 export default function InfluencersTable() {
   const [page, setPage] = useState(1);
 
-  const { data } = useQuery<AllInfluencersResponse>({
-    queryKey: ['influencers', page],
+  const { data } = useQuery<AllBrandsResponse>({
+    queryKey: ['brands', page],
     queryFn: () => fetchInfluencers(page),
     placeholderData: keepPreviousData,
   });
 
   if (!data) return null;
 
-  const influencers = data.influencers;
+  const brands = data.brands;
   const hasMore = data.totalPages > page;
-  const totalInfluencers = data.totalInfluencers;
+  const totalBrands = data.totalBrands;
   const limit = data.limit;
 
   return (
@@ -44,21 +42,18 @@ export default function InfluencersTable() {
               <table className="min-w-full divide-y divide-zinc-700">
                 <TableHeader />
                 <tbody className="divide-y divide-zinc-800">
-                  {influencers.map((influencer: Influencer) => (
-                    <InfluencerTableRow
-                      key={influencer.id}
-                      influencer={influencer}
-                    />
+                  {brands.map((brand) => (
+                    <BrandTableRow key={brand.id} brand={brand} />
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-        <InfluencerTableActions influencers={influencers} />
+        <BrandTableActions brands={brands} />
       </div>
       <Pagination
-        data={{ hasMore, totalInfluencers, limit }}
+        data={{ hasMore, totalBrands, limit }}
         page={page}
         setPage={setPage}
       />

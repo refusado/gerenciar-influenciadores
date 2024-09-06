@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/useToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   At,
+  CaretDown,
   Crosshair,
   Eye,
   ImageSquare,
@@ -20,13 +21,13 @@ import { forwardRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ImageFileInput } from '../image-input';
-import { niches } from './niches';
+import { niches } from '../niches';
 import { updateInfluencerSchema } from './schemas/update-schema';
 
 export const UpdateInfluencerForm = forwardRef<
   HTMLFormElement,
-  { influencerId: number }
->(({ influencerId, ...props }, ref) => {
+  { influencerId: number; onCancel?: () => void }
+>(({ influencerId, onCancel, ...props }, ref) => {
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
     mutationFn: (data: FormData) =>
@@ -53,13 +54,6 @@ export const UpdateInfluencerForm = forwardRef<
     setValue,
     watch,
   } = form;
-
-  const onSuccess = () => {
-    reset();
-    setValue('image', '');
-    closeModal();
-    addToast('Influencer atualizado com sucesso!');
-  };
 
   async function submitForm(data: z.infer<typeof updateInfluencerSchema>) {
     setServerError(false);
@@ -103,8 +97,10 @@ export const UpdateInfluencerForm = forwardRef<
 
     try {
       const updatedInfluencer = await mutateAsync(formData);
-      onSuccess();
       openModal('view-influencer', updatedInfluencer);
+      addToast('Influenciador atualizado com sucesso!');
+      reset();
+      setValue('image', '');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response;
@@ -203,8 +199,8 @@ export const UpdateInfluencerForm = forwardRef<
           </Form.Field>
         </div>
 
-        <div className="flex flex-col justify-between *:space-y-4">
-          <div>
+        <div className="flex flex-col justify-between">
+          <div className="mb-4 space-y-4">
             <Form.Field name="instagram" serverInvalid={!!errors.instagram}>
               <Form.Label className="mb-1 flex items-center gap-2">
                 <InstagramLogo className="size-5 opacity-80" /> Instagram
@@ -232,21 +228,24 @@ export const UpdateInfluencerForm = forwardRef<
               <Form.Label className="mb-1 flex items-center gap-2">
                 <Crosshair className="size-5 opacity-80" /> Nicho
               </Form.Label>
-              <Form.Control asChild>
-                <select
-                  {...register('niche')}
-                  className="mb-1 inline-block w-full cursor-pointer appearance-none px-3 py-2 leading-normal hover:brightness-125"
-                >
-                  <option value={''} defaultChecked>
-                    Selecione uma opção
-                  </option>
-                  {niches.map((niche, i) => (
-                    <option key={i} value={niche}>
-                      {niche}
+              <div className="relative mb-1 inline-flex h-max w-full items-center">
+                <Form.Control asChild>
+                  <select
+                    {...register('niche')}
+                    className="inline-block w-full cursor-pointer appearance-none px-3 py-2 leading-normal hover:brightness-125"
+                  >
+                    <option value={''} defaultChecked>
+                      Selecione uma opção
                     </option>
-                  ))}
-                </select>
-              </Form.Control>
+                    {niches.map((niche, i) => (
+                      <option key={i} value={niche}>
+                        {niche}
+                      </option>
+                    ))}
+                  </select>
+                </Form.Control>
+                <CaretDown className="absolute right-[0.75rem] size-5" />
+              </div>
               {errors.niche && (
                 <Form.Message className="error-text">
                   {errors.niche.message}
@@ -278,8 +277,17 @@ export const UpdateInfluencerForm = forwardRef<
           </div>
 
           <div>
+            {onCancel ? (
+              <button
+                className="mb-2 w-full rounded-sm px-4 py-2 text-error shadow-sm duration-100 hover:bg-red-900/10 hover:brightness-110 disabled:opacity-60"
+                onClick={onCancel}
+                type="button"
+              >
+                Cancelar
+              </button>
+            ) : null}
             <Form.Submit
-              className="mt-4 w-full rounded-sm bg-purple-600/60 px-4 py-2 shadow-sm duration-100 hover:brightness-110 disabled:opacity-60"
+              className="w-full rounded-sm bg-purple-600/60 px-4 py-2 shadow-sm duration-100 hover:brightness-110 disabled:opacity-60"
               disabled={isSubmitting}
             >
               Atualizar Influencer

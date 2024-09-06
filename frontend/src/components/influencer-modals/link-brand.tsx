@@ -1,4 +1,5 @@
 import { api } from '@/app/admin/api/axios';
+import brandApi from '@/app/admin/api/brandApi';
 import influencerApi from '@/app/admin/api/influencerApi';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
@@ -34,22 +35,13 @@ export function LinkBrand({ resource }: { resource: Influencer }) {
     },
   });
 
-  const { data: result, isLoading } = useQuery<{
-    data: {
-      brands: [
-        {
-          id: number;
-          name: string;
-          description: string;
-          niche: string;
-          createdAt: string;
-          updatedAt: string;
-        },
-      ];
-    };
-  }>({
+  const { data, isLoading } = useQuery({
     queryKey: ['brands'],
-    queryFn: () => api.get('/brands'),
+    queryFn: () =>
+      brandApi.getAllBrands({
+        page: 1,
+        limit: 100,
+      }),
   });
 
   return (
@@ -105,7 +97,7 @@ export function LinkBrand({ resource }: { resource: Influencer }) {
             </div>
             <div className="mb-6 flex flex-wrap items-center gap-2 text-sm">
               <h5 className="text-lg font-bold">Associar marca</h5>
-              {isLoading ? (
+              {isLoading || !data?.brands ? (
                 <p>Carregando marcas...</p>
               ) : (
                 <select
@@ -116,13 +108,11 @@ export function LinkBrand({ resource }: { resource: Influencer }) {
                   <option defaultChecked value="">
                     Selecione uma opção
                   </option>
-                  {result?.data.brands.map(
-                    (brand: { id: number; name: string }) => (
-                      <option key={brand.id} value={brand.id}>
-                        {brand.name}
-                      </option>
-                    ),
-                  )}
+                  {data?.brands.map((brand: { id: number; name: string }) => (
+                    <option key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </option>
+                  ))}
                 </select>
               )}
             </div>
@@ -134,8 +124,7 @@ export function LinkBrand({ resource }: { resource: Influencer }) {
         <button
           onClick={() => {
             setSelectedBrand(null);
-            addToast('Operação cancelada');
-            closeModal();
+            openModal('view-influencer', resource);
           }}
           className="inline-flex items-center justify-center gap-2 px-6 py-2 text-error hover:bg-red-950/20"
         >

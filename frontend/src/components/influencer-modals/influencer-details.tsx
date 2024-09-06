@@ -1,6 +1,11 @@
 import influencerApi from '@/app/admin/api/influencerApi';
+import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
-import { formatDate, formatRelativeDate } from '@/lib/format-date';
+import {
+  formatDate,
+  formatDateTime,
+  formatRelativeDate,
+} from '@/lib/format-date';
 import { UniqueInfluencerResponse } from '@/types/influencer';
 import {
   Clipboard,
@@ -13,8 +18,9 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
 export function InfluencerDetails({ influencerId }: { influencerId: number }) {
+  const { openModal } = useModal();
   const { data } = useQuery<UniqueInfluencerResponse>({
-    queryKey: ['influencer'],
+    queryKey: ['influencers'],
     queryFn: () => influencerApi.getInfluencerById(influencerId),
   });
   const { addToast } = useToast();
@@ -59,6 +65,15 @@ export function InfluencerDetails({ influencerId }: { influencerId: number }) {
     <div className="flex h-full flex-col justify-between">
       <div className="relative mb-4 rounded-lg bg-zinc-900 p-4 shadow-md">
         <h4 className="mb-2 text-2xl font-bold">{name}</h4>
+
+        <button
+          onClick={copyInfluencerData}
+          className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-zinc-700/50 text-zinc-300 opacity-50 hover:opacity-100"
+          title="Copiar dados do influenciador"
+        >
+          <Clipboard className="size-5" />
+        </button>
+
         <div className="mb-6 flex flex-wrap items-center gap-2 text-sm">
           <a
             href={`http://www.instagram.com/-${instagram}`}
@@ -95,25 +110,30 @@ export function InfluencerDetails({ influencerId }: { influencerId: number }) {
         <div>
           {brands.length ? (
             <>
-              <h4 className="mb-2 text-lg font-semibold">Marcas</h4>
+              <h4 className="mb-2 text-lg font-semibold">Marcas associadas</h4>
               <div className="flex flex-col gap-2">
-                {brands.map((brandObj, index) => (
-                  <div
+                {brands.map(({ brand }, index) => (
+                  <button
+                    onClick={() => openModal('view-brand', undefined, brand)}
                     key={index}
-                    className="rounded bg-zinc-700/30 p-2 text-sm shadow-sm"
+                    className="group rounded border border-purple-100/10 bg-purple-200/5 p-2 text-start text-sm shadow-sm duration-200 hover:bg-purple-300/5"
+                    title={`Visualizar detalhes da marca #${brand.id}`}
                   >
-                    <h3 className="text-base font-semibold">
-                      {brandObj.brand.name}
+                    <h3 className="flex text-base font-semibold group-hover:underline">
+                      {brand.name}{' '}
+                      <span className="ml-auto inline-block opacity-35">
+                        #{brand.id}
+                      </span>
                     </h3>
-                    <p className="mb-2">{brandObj.brand.description}</p>
+                    <p className="mb-2 opacity-70">{brand.description}</p>
                     <p>
-                      <b>Nicho</b>: {brandObj.brand.niche}
+                      <b>Nicho</b>: {brand.niche}
                     </p>
-                    <p>
+                    <p title={formatDateTime(brand.createdAt)}>
                       <b>Adicionado em</b>:{' '}
-                      {dayjs(brandObj.brand.createdAt).format('DD/MM/YYYY')}
+                      {dayjs(brand.createdAt).format('DD/MM/YYYY')}
                     </p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </>
@@ -123,14 +143,6 @@ export function InfluencerDetails({ influencerId }: { influencerId: number }) {
             </p>
           )}
         </div>
-
-        <button
-          onClick={copyInfluencerData}
-          className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-purple-700/15 text-zinc-300 opacity-50 hover:opacity-100"
-          title="Copiar dados do influenciador"
-        >
-          <Clipboard className="size-5" />
-        </button>
       </div>
 
       <div className="text-sm opacity-70">
@@ -138,8 +150,7 @@ export function InfluencerDetails({ influencerId }: { influencerId: number }) {
           Criado há {formatRelativeDate(createdAt)}
         </p>
         <p title={formatDate(updateAt)}>
-          Atualizado
-          {formatRelativeDate(updateAt) === 'agora' ? '' : 'há'}{' '}
+          Atualizado {formatRelativeDate(updateAt) === 'agora' ? '' : 'há'}{' '}
           {formatRelativeDate(updateAt)}
         </p>
       </div>

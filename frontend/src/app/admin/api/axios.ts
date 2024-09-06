@@ -20,7 +20,7 @@ api.interceptors.response.use(
       window.location.href = '/login?message=unauthorized';
     }
 
-    console.log(error);
+    console.log('API Error Status:', error.response?.status);
 
     return Promise.reject(error);
   },
