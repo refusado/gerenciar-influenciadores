@@ -13,6 +13,7 @@ import {
   Eye,
   InstagramLogo,
   MapPin,
+  Tag,
 } from '@phosphor-icons/react/dist/ssr';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -110,7 +111,10 @@ export function InfluencerDetails({ influencerId }: { influencerId: number }) {
         <div>
           {brands.length ? (
             <>
-              <h4 className="mb-2 text-lg font-semibold">Marcas associadas</h4>
+              <h4 className="mb-2 text-lg font-semibold">
+                <Tag className="mr-2 inline-block size-5" />
+                Marcas associadas
+              </h4>
               <div className="flex flex-col gap-2">
                 {brands.map(({ brand }, index) => (
                   <button

@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { env } from 'process';
 
 export function AdminHeader() {
   const currentPath = usePathname();

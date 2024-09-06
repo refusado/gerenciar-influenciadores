@@ -12,6 +12,7 @@ import {
   Crosshair,
   Eye,
   InstagramLogo,
+  User,
 } from '@phosphor-icons/react/dist/ssr';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -74,6 +75,7 @@ export function BrandDetails({ brandId }: { brandId: number }) {
           {influencers.length ? (
             <>
               <h4 className="mb-2 text-lg font-semibold">
+                <User className="mr-2 inline-block size-5" />
                 Influenciadores associados
               </h4>
               <div className="flex flex-col gap-2">

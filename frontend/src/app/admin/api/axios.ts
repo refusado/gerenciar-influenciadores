@@ -1,11 +1,10 @@
 'use client';
 
+import { BASE_URL } from '@/consts';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const baseURL = 'http://localhost:3333/api';
-
 export const api = axios.create({
-  baseURL,
+  baseURL: BASE_URL + '/api',
   withCredentials: true,
   timeout: 7000,
   headers: {

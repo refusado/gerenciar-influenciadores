@@ -1,6 +1,7 @@
 import { api } from '@/app/admin/api/axios';
 import brandApi from '@/app/admin/api/brandApi';
 import influencerApi from '@/app/admin/api/influencerApi';
+import { BASE_URL } from '@/consts';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
 import { Influencer } from '@/types/influencer';
@@ -50,7 +51,7 @@ export function LinkBrand({ resource }: { resource: Influencer }) {
         <div className="mx-auto flex aspect-square max-h-[320px] w-full max-w-[320px] flex-col items-center justify-center overflow-hidden rounded-md border-[1px] border-zinc-700/30 bg-zinc-950 shadow-md md:shrink-0">
           {resource.image ? (
             <img
-              src={`http://localhost:3333/img/${resource.image}`}
+              src={`${BASE_URL}/img/${resource.image}`}
               alt={`Foto de ${resource.name}`}
               className="size-full object-cover"
             />

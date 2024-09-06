@@ -1,12 +1,15 @@
 'use client';
 
 import brandApi from '@/app/admin/api/brandApi';
+import { NICHES } from '@/consts';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Article,
   CaretDown,
   Crosshair,
+  TextAa,
   UserRectangle,
 } from '@phosphor-icons/react/dist/ssr';
 import * as Form from '@radix-ui/react-form';
@@ -14,7 +17,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { forwardRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { niches } from '../niches';
 
 export const updateBrandSchema = z.object({
   name: z
@@ -106,7 +108,7 @@ export const UpdateBrandForm = forwardRef<
         <div className="space-y-4">
           <Form.Field name="name" serverInvalid={!!errors.name}>
             <Form.Label className="mb-1 flex items-center gap-2">
-              <UserRectangle className="size-5 opacity-80" /> Nome
+              <TextAa className="size-5 opacity-80" /> Novo nome
             </Form.Label>
             <Form.Control asChild>
               <input
@@ -126,7 +128,7 @@ export const UpdateBrandForm = forwardRef<
 
           <Form.Field name="description" serverInvalid={!!errors.description}>
             <Form.Label className="mb-1 flex items-center gap-2">
-              <UserRectangle className="size-5 opacity-80" /> Descrição
+              <Article className="size-5 opacity-80" /> Nova descrição
             </Form.Label>
             <Form.Control asChild>
               <input
@@ -145,7 +147,7 @@ export const UpdateBrandForm = forwardRef<
           </Form.Field>
           <Form.Field name="niche" serverInvalid={!!errors.niche}>
             <Form.Label className="mb-1 flex items-center gap-2">
-              <Crosshair className="size-5 opacity-80" /> Nicho
+              <Crosshair className="size-5 opacity-80" /> Mudar nicho
             </Form.Label>
 
             <div className="relative mb-1 inline-flex h-max w-full items-center">
@@ -157,7 +159,7 @@ export const UpdateBrandForm = forwardRef<
                   <option value={''} defaultChecked>
                     Selecione uma opção
                   </option>
-                  {niches.map((niche, i) => (
+                  {NICHES.map((niche, i) => (
                     <option key={i} value={niche}>
                       {niche}
                     </option>
@@ -187,7 +189,7 @@ export const UpdateBrandForm = forwardRef<
               className="w-full rounded-sm bg-purple-600/60 px-4 py-2 shadow-sm duration-100 hover:brightness-110 disabled:opacity-60"
               disabled={isSubmitting}
             >
-              Cadastrar marca
+              Salvar alterações
             </Form.Submit>
 
             {serverError && <p className="error-text">{serverError}</p>}

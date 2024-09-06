@@ -8,6 +8,7 @@ import {
   Unite,
 } from '@phosphor-icons/react/dist/ssr';
 import { InfluencerDetails } from './influencer-details';
+import { BASE_URL } from '@/consts';
 
 export function ViewInfluencerModal({ resource }: { resource: Influencer }) {
   const { openModal } = useModal();
@@ -18,7 +19,7 @@ export function ViewInfluencerModal({ resource }: { resource: Influencer }) {
         <div className="mx-auto flex aspect-square max-h-[320px] w-full max-w-[320px] flex-col items-center justify-center overflow-hidden rounded-md border-[1px] border-zinc-700/30 bg-zinc-950 shadow-md md:shrink-0">
           {resource.image ? (
             <img
-              src={`http://localhost:3333/img/${resource.image}`}
+              src={`${BASE_URL}/img/${resource.image}`}
               alt={`Foto de ${resource.name}`}
               className="size-full object-cover"
             />

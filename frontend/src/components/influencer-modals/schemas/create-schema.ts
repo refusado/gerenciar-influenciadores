@@ -1,12 +1,5 @@
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/consts';
 import { z } from 'zod';
-
-const MAX_FILE_SIZE = 1024 * 1024 * 5;
-const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-];
 
 export const registerInfluencerSchema = z.object({
   name: z

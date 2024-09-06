@@ -1,12 +1,13 @@
 'use client';
 
-import influencerApi from '@/app/admin/api/influencerApi';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Article,
   CaretDown,
   Crosshair,
+  TextAa,
   UserRectangle,
 } from '@phosphor-icons/react/dist/ssr';
 import * as Form from '@radix-ui/react-form';
@@ -14,9 +15,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { forwardRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { niches } from '../niches';
 import brandApi from '@/app/admin/api/brandApi';
 import { BrandRequest } from '@/types/brand';
+import { NICHES } from '@/consts';
 
 export const registerBrandSchema = z.object({
   name: z
@@ -45,7 +46,7 @@ export const RegisterBrandForm = forwardRef<HTMLFormElement>((props, ref) => {
     resolver: zodResolver(registerBrandSchema),
     defaultValues: {
       name: 'Clube Atlético Mineiro',
-      niche: niches[31],
+      niche: NICHES[31],
       description: 'Lorem impmd, consectetur adipiscing elit.',
     },
   });
@@ -86,7 +87,7 @@ export const RegisterBrandForm = forwardRef<HTMLFormElement>((props, ref) => {
         <div className="space-y-4">
           <Form.Field name="name" serverInvalid={!!errors.name}>
             <Form.Label className="mb-1 flex items-center gap-2">
-              <UserRectangle className="size-5 opacity-80" /> Nome
+              <TextAa className="size-5 opacity-80" /> Nome
             </Form.Label>
             <Form.Control asChild>
               <input
@@ -106,7 +107,7 @@ export const RegisterBrandForm = forwardRef<HTMLFormElement>((props, ref) => {
 
           <Form.Field name="description" serverInvalid={!!errors.description}>
             <Form.Label className="mb-1 flex items-center gap-2">
-              <UserRectangle className="size-5 opacity-80" /> Descrição
+              <Article className="size-5 opacity-80" /> Descrição
             </Form.Label>
             <Form.Control asChild>
               <input
@@ -136,7 +137,7 @@ export const RegisterBrandForm = forwardRef<HTMLFormElement>((props, ref) => {
                   <option value={''} defaultChecked>
                     Selecione uma opção
                   </option>
-                  {niches.map((niche, i) => (
+                  {NICHES.map((niche, i) => (
                     <option key={i} value={niche}>
                       {niche}
                     </option>

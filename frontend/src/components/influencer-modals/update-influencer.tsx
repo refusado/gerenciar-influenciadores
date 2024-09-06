@@ -1,6 +1,7 @@
 'use client';
 
 import influencerApi from '@/app/admin/api/influencerApi';
+import { NICHES } from '@/consts';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,7 +22,6 @@ import { forwardRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ImageFileInput } from '../image-input';
-import { niches } from '../niches';
 import { updateInfluencerSchema } from './schemas/update-schema';
 
 export const UpdateInfluencerForm = forwardRef<
@@ -237,7 +237,7 @@ export const UpdateInfluencerForm = forwardRef<
                     <option value={''} defaultChecked>
                       Selecione uma opção
                     </option>
-                    {niches.map((niche, i) => (
+                    {NICHES.map((niche, i) => (
                       <option key={i} value={niche}>
                         {niche}
                       </option>
