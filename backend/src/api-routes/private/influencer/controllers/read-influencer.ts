@@ -7,6 +7,8 @@ export async function getAllInfluencersHandler(
 ) {
   const { page, limit } = request.query as { page: number; limit: number };
 
+  // todo: filters by name, reach, niche, oldest/newest, last updated
+
   const [allInfluencers, totalInfluencers] = await Promise.all([
     prisma.influencer.findMany({
       skip: (page - 1) * limit,
@@ -37,5 +39,10 @@ export async function getInfluencerByIdHandler(
   if (!influencer)
     return reply.status(404).send({ message: 'Influencer not found.' });
 
-  return reply.send({ influencer });
+  const brands = await prisma.influencerBrandLink.findMany({
+    where: { influencerId: id },
+    select: { brand: true },
+  });
+
+  return reply.status(200).send({ ...influencer, brands });
 }

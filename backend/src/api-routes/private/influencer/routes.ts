@@ -8,7 +8,11 @@ import {
   getInfluencerByIdHandler,
 } from './controllers/read-influencer';
 import { updateInfluencerHandler } from './controllers/update-influencer';
-import { errorResponseSchema, influencerResponseSchema } from './schemas';
+import {
+  errorResponseSchema,
+  influencerResponseSchema,
+  uniqueInfluencerResponseSchema,
+} from './schemas';
 
 export async function influencerRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -64,9 +68,7 @@ export async function influencerRoutes(app: FastifyInstance) {
           id: z.coerce.number(),
         }),
         response: {
-          200: z.object({
-            influencer: influencerResponseSchema,
-          }),
+          200: uniqueInfluencerResponseSchema,
           '4xx': errorResponseSchema,
         },
       },

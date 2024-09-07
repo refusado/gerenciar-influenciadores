@@ -49,9 +49,9 @@ export async function updateInfluencerHandler(
     }
   }
 
-  if (!jsonData || !imageFileName) {
+  if (!jsonData && !imageFileName) {
     return reply.status(400).send({
-      message: 'Missing data or image',
+      message: 'Missing data and image',
     });
   }
 

@@ -24,11 +24,22 @@ export async function influencerBrandLinkRoutes(app: FastifyInstance) {
               createdAt: z.date(),
             }),
           }),
+          '4xx': z.object({ message: z.string() }),
         },
       },
     },
     async (request, reply) => {
       const { influencerId, brandId } = request.body;
+
+      const linkExists = await prisma.influencerBrandLink.findFirst({
+        where: { influencerId, brandId },
+      });
+
+      if (linkExists) {
+        return reply.status(409).send({
+          message: 'This influencer and brand are already connected.',
+        });
+      }
 
       const link = await prisma.influencerBrandLink.create({
         data: { influencerId, brandId },
