@@ -20,8 +20,8 @@ export const LoginForm = forwardRef<HTMLFormElement>((props, ref) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: 'renanfreitas.contato@gmail.com',
-      password: 'teste123',
+      email: '',
+      password: '',
     },
   });
 

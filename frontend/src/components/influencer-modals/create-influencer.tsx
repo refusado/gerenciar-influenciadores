@@ -41,11 +41,11 @@ export const RegisterInfluencerForm = forwardRef<HTMLFormElement>(
     const form = useForm<z.infer<typeof registerInfluencerSchema>>({
       resolver: zodResolver(registerInfluencerSchema),
       defaultValues: {
-        name: 'Renan Freitas',
-        instagram: 'refu.dev',
-        niche: NICHES[31],
-        reach: 31415,
-        cep: '99999999',
+        name: '',
+        instagram: '',
+        niche: '',
+        reach: 0,
+        cep: '',
       },
     });
 

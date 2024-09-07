@@ -45,9 +45,9 @@ export const RegisterBrandForm = forwardRef<HTMLFormElement>((props, ref) => {
   const form = useForm<z.infer<typeof registerBrandSchema>>({
     resolver: zodResolver(registerBrandSchema),
     defaultValues: {
-      name: 'Clube Atlético Mineiro',
-      niche: NICHES[31],
-      description: 'Lorem impmd, consectetur adipiscing elit.',
+      name: '',
+      niche: '',
+      description: '',
     },
   });
 
