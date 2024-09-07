@@ -1,5 +1,7 @@
 Desenvolvimento fullstack em javascript com Node.js e React.js de um sistema administrativo de uma plataforma para influenciadores e marcas, possibilitando o gerenciamento de ambas entidades.
 
+[Vídeo de demonstração](https://youtu.be/Ayf6pMDu22I)
+
 ## Tabela de conteúdo
 - [Funcionalidades](#funcionalidades)
 - [Tecnologias](#tecnologias)
@@ -24,7 +26,7 @@ Desenvolvimento fullstack em javascript com Node.js e React.js de um sistema adm
 ## tecnologias
 - React.js para o frontend, usado o Next.js como SSG
 - Fastify para desenvolvimento da API, servir a aplicação e seus recursos
-- Typescript tanto no frontend quanto para o frontend para desenvolvimento mais escalável e seguro
+- Typescript tanto no backend quanto para o frontend para desenvolvimento mais escalável e seguro
 - Prisma ORM para lidar com aspectos relacionados ao banco de dados
 - Eslint com Prettier para garantir padronização e formatação do código e melhorar a experiência de desenvolvimento
 - Axios para consumo tanto da API interna quanto APIs externas no frontend e no backend
@@ -138,7 +140,7 @@ npm run dev
 O Next.js rodará a aplicação na porta `http://localhost:3000` (ou outra porta disponível).
 
 > [!WARNING]
-> Por padrão, o fronted irá usar o caminho `http://localhost:3333` para fazer as chamadas à API. Não configurei variáveis de ambiente no frontend, então se o seu servidor fastify estiver rodando em outra porta, muda o valor da constante **BASE_URL** no arquivo `consts.ts` que está no caminho `frontend/src/`
+> Por padrão, o frontend irá usar o caminho `http://localhost:3333` para fazer as chamadas à API. Não configurei variáveis de ambiente no frontend, então se o seu servidor fastify estiver rodando em outra porta, muda o valor da constante **BASE_URL** no arquivo `consts.ts` que está no caminho `frontend/src/`
 
 ### 5. Execute os testes
 
