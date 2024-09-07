@@ -51,8 +51,8 @@ model InfluencerBrandLink {
   brandId      Int
   createdAt    DateTime @default(now())
 
-  influencer Influencer @relation(fields: [influencerId], references: [id])
-  brand      Brand      @relation(fields: [brandId], references: [id])
+  influencer Influencer @relation(fields: [influencerId], references: [id], onDelete: Cascade)
+  brand      Brand      @relation(fields: [brandId], references: [id], onDelete: Cascade)
 
   @@id([influencerId, brandId])
 }

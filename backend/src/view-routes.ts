@@ -6,8 +6,6 @@ import { existsSync } from 'fs';
 
 const clientRoot = path.resolve(__dirname, '../dist/web-app');
 
-console.log(clientRoot);
-
 const pathExists = (file: string) => existsSync(path.join(clientRoot, file));
 
 async function adminRouteHandler(request: FastifyRequest, reply: FastifyReply) {
